@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$USER_HOME$/Downloads/app_person (1).sql" dialect="SQLite" />
+    <file url="file://$USER_HOME$/Downloads/app_person.sql" dialect="SQLite" />
+    <file url="file://$USER_HOME$/Downloads/auth_user (1).sql" dialect="SQLite" />
+    <file url="file://$USER_HOME$/Downloads/auth_user (2).sql" dialect="SQLite" />
+    <file url="file://$USER_HOME$/Downloads/auth_user (3).sql" dialect="SQLite" />
+  </component>
+</project>

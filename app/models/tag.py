@@ -10,8 +10,5 @@ class Tag(models.Model):
                                    default=None)
     categories = models.ManyToManyField(Category)
 
-    # def __str__(self):
-    #     result = self.categories
-    #     if self.description is not None:
-    #         result += ' ' + self.description[:80]
-    #     return result
+    def __str__(self):
+        return str(self.description)
