@@ -1,13 +1,16 @@
+from pprint import pprint
 from random import randrange
-
+from django.http import HttpResponseRedirect, request
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
-
 # Create your views here.
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.views.generic import TemplateView, FormView, ListView
 from werkzeug.debug import console
 
+from Snowmance import settings
+from app.froms.profile import FormProfile
 from app.froms.register import FormRegister
 from app.models.person import Person
 from app.models.question import Question
@@ -31,6 +34,22 @@ def signup(self):
 class IndexView(TemplateView):
     template_name = 'index.html'
     model = Person
+
+
+class LoginView(TemplateView):
+    template_name = 'login.html'
+
+    def post(self, request, **kwargs):
+        username = request.POST.get('username', False)
+        password = request.POST.get('password', False)
+        user = authenticate(username=username, password=password)
+        if user is not None and user.is_active:
+            login(request, user)
+            print("hello")
+            return HttpResponseRedirect(settings.LOGIN_REDIRECT_URL)
+        print(username)
+        return render(request, self.template_name)
+
 
 class RegisterView(FormView):
     model = Question
@@ -56,12 +75,31 @@ class RegisterView(FormView):
                               avatar=avatar)
         print("OK")
         console.log("OK")
-        return super().form_valid(form)
+        return HttpResponseRedirect(settings.LOGIN_URL)
 
-class PersonSearchDetailView(ListView):
+
+class PersonSearchView(ListView):
     template_name = 'index.html'
     model = Person
 
     def get_queryset(self):
-        title = self.kwargs.get('slug', '')
-        return Person.objects.filter(title__contains=title)
+        user = User.objects.get(username=self.request.user)
+        person = Person.objects.get(user=user)
+        user_person = Person.objects.filter(Q(hobby_id=person.hobby_id) | Q(way_of_life_id=person.way_of_life_id) | Q(
+            personality_id=person.personality_id))[:10]
+        print(user_person)
+        return user_person
+
+
+class PersonSearchTagView(ListView):
+    template_name = 'index.html'
+    model = Person
+
+    def get_queryset(self):
+        tag = self.kwargs.get('pk', '')
+        return Person.objects.filter(Q(hobby_id=tag) | Q(way_of_life_id=tag) | Q(personality_id=tag))
+
+class ProfileView(FormView):
+    model = Question
+    template_name = 'profile.html'
+    form_class = FormProfile

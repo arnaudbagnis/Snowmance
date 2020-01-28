@@ -1,0 +1,51 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block user_list %}
+    <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    {{ object }}
+                    {% for object in object_list %}
+                        <!-- Page Heading -->
+                        {#                    <h1 class="h3 mb-4 text-gray-800">Blank Page</h1>#}
+
+                        <!-- Circle Buttons -->
+                        <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">
+
+                                {{ object.user.first_name }} {{ object.birth }}
+
+                            </h6>
+
+                        </div>
+                        <div class="card-body">
+                            <p><img src="{{ object.avatar }}"></p>
+                            Description : {{ object.description }}
+                            <br>
+                            <a href="{% url 'app_cocktail_search_tag' object.way_of_life.id %}" class="btn btn-success btn-icon-split">
+                                <i class="fas fa-check"></i>
+                                <span  class="text">{{ object.way_of_life}}</span>
+                            </a>
+                            <a href="{% url 'app_cocktail_search_tag' object.hobby.id %}" class="btn btn-success btn-icon-split">
+                                <i class="fas fa-check"></i>>
+                                <span  class="text">{{ object.hobby}}</span>
+                            </a>
+                            <a href="{% url 'app_cocktail_search_tag' object.personality.id%}" class="btn btn-success btn-icon-split">
+                                <i class="fas fa-check"></i>
+                                <span  class="text">{{ object.personality }}</span>
+                            </a>
+                            </p>
+                            <!-- Circle Buttons (Default) -->
+                            <div class="mb-2">
+                                <a href="#" class="btn btn-info btn-icon-split">
+                                 <span class="text"> Voir plus </span>
+                  </a>
+                            </div>
+                        </div>
+
+                        <!-- /.container-fluid -->
+
+                    </div>
+                    {% endfor %}
+                    <!-- End of Main Content -->
+{% endblock %}

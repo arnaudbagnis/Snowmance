@@ -130,3 +130,9 @@ STATICFILES_DIRS = (
 BOOTSTRAP4 = {
     'include_jquery': True,
 }
+
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login'
+TEMPLATE_DIRS = (
+    BASE_DIR + '/templates/',
+)

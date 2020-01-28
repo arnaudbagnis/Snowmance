@@ -46,20 +46,25 @@
                                 {% csrf_token %}
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
+                                        {{ form.first_name.errors }}
                                         {{ form.first_name }}
                                     </div>
                                     <div class="col-sm-6">
+                                        {{ form.last_name.errors }}
                                         {{ form.last_name }}
                                     </div>
                                 </div>
                                 <div class="form-group" id="datetimepicker4" data-target-input="nearest">
+                                    {{ form.birth.errors }}
                                     {{ form.birth }}
                                 </div>
                                 <div class="form-group">
+                                    {{ form.email.errors }}
                                     {{ form.email }}
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
+                                        {{ form.password_1.errors }}
                                         {{ form.password_1 }}
                                     </div>
                                     <div class="col-sm-6">
@@ -76,18 +81,21 @@
                                     Hobby
                                 </div>
                                 <div class="form-group">
+                                    {{ form.hobby.errors }}
                                     {{ form.hobby }}
                                 </div>
                                 <div class="form-group" data-target-input="nearest">
                                     Personality
                                 </div>
                                 <div class="form-group">
+                                    {{ form.personality.errors }}
                                     {{ form.personality }}
                                 </div>
                                 <div class="form-group">
                                     Way Of Life
                                 </div>
                                 <div class="form-group">
+                                    {{ form.way_of_life.errors }}
                                     {{ form.way_of_life }}
                                 </div>
 
