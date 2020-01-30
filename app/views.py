@@ -1,3 +1,4 @@
+import datetime
 from pprint import pprint
 from random import randrange
 from urllib.parse import urlunparse
@@ -25,6 +26,7 @@ from app.froms.profile import FormProfile
 from app.froms.register import FormRegister
 from app.models.person import Person
 from app.models.question import Question
+from app.models.visitor import Visitor
 
 
 def signup(self):
@@ -109,9 +111,11 @@ class RegisterView(FormView):
                                         password=password_1, first_name=first_name, last_name=last_name)
         Person.objects.create(user=user, birth=birth, personality=personality, way_of_life=way_of_life, hobby=hobby,
                               avatar=avatar)
-        print("OK")
-        console.log("OK")
-        return HttpResponseRedirect(settings.LOGIN_URL)
+        username = form.cleaned_data.get('username')
+        raw_password = form.cleaned_data.get('password_1')
+        user = authenticate(username=username, password=raw_password)
+        login(self, user)
+        return redirect_to_login(next)
 
 
 class PersonSearchView(LoginRequiredMixin, ListView):
@@ -137,11 +141,34 @@ class PersonSearchTagView(LoginRequiredMixin, ListView):
         tag = self.kwargs.get('pk', '')
         return Person.objects.filter(Q(hobby_id=tag) | Q(way_of_life_id=tag) | Q(personality_id=tag))
 
+class ProfilSearchView(LoginRequiredMixin, ListView):
+    template_name = 'profile.html'
+    model = Person
+
+    def get_queryset(self):
+        id_person = self.kwargs.get('pk', '')
+        Visitor.objects.create(date=datetime.datetime.now(), visitor=Person.objects.get(user=User.objects.get(username=self.request.user)), person=Person.objects.get(user=User.objects.get(id=id_person)))
+        return Person.objects.filter(id=id_person)
+
 
 class ProfileView(LoginRequiredMixin, FormView):
     model = Question
-    template_name = 'profile.html'
+    template_name = 'edit_profile.html'
     form_class = FormProfile
+
+    def get_initial(self):
+        user = User.objects.get(username=self.request.user)
+        person = Person.objects.get(user=user)
+        initial = super().get_initial()
+        initial["first_name"] = person.user.first_name
+        initial["last_name"] = person.user.last_name
+        initial["birth"] = person.birth
+        initial["email"] = person.user.email
+        initial["password"] = person.user.password
+        initial["hobby"] = person.hobby
+        initial["personality"] = person.personality
+        initial["way_of_life"] = person.way_of_life
+        return initial
 
 
 class LogoutView(SuccessURLAllowedHostsMixin, TemplateView):

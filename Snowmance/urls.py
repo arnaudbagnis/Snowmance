@@ -18,7 +18,8 @@ from django.contrib import admin
 from django.urls import path
 
 from app.models.person import Person
-from app.views import IndexView, RegisterView, PersonSearchView, PersonSearchTagView, LoginView, ProfileView, LogoutView
+from app.views import IndexView, RegisterView, PersonSearchView, PersonSearchTagView, LoginView, ProfileView, \
+    LogoutView, ProfilSearchView
 
 # from core import views as core_views
 
@@ -27,7 +28,8 @@ urlpatterns = [
     url(r'^$', PersonSearchView.as_view(), name='app_index'),
     url(r'register/$', RegisterView.as_view(), name='app_register_view'),
     url(r'logout/$', LogoutView.as_view(), name='app_register_view'),
-    url(r'profil/$', ProfileView.as_view(), name='app_profile_view'),
+    url('profil/view', ProfileView.as_view(), name='app_profile_view'),
+    path('profil/tag/<int:pk>', ProfilSearchView.as_view(), name='app_profile_search_tag'),
     url(r'login/$', LoginView.as_view(), name='app_login_view'),
     path('person/tag/<int:pk>', PersonSearchTagView.as_view(), name='app_cocktail_search_tag')
 ]

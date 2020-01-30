@@ -44,7 +44,7 @@
                 <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
                      data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="/profil/view">Afficher</a>
+                        <a class="collapse-item" href="/profil">Afficher</a>
                         <a class="collapse-item" href="/logout">Se Deconnecter</a>
                         <a class="collapse-item" href="{% static 'forgot-password.html' %}">Suprimer mon compte</a>
                     </div>
@@ -55,7 +55,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
                    aria-expanded="true" aria-controls="collapseUtilities">
                     <i class="fas fa-fw fa-wrench"></i>
-                    <span>Mes messages</span>
+                    <span>Mes affinités</span>
                 </a>
             </li>
 
@@ -298,50 +298,68 @@
 
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    {% for object in object_list %}
-                        <!-- Circle Buttons -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <p><img src="{{ object.avatar }}"></p>
-                                <h4 class="m-0 font-weight-bold text-primary">{{ object.user }}</h4>
-                            </div>
-                            <div class="card-body">
-                                <p> {{ object.description }}</p>
-                                <a href="{% url 'app_cocktail_search_tag' object.way_of_life.id %}"
-                                   class="btn btn-success btn-icon-split">
-                                    <i class="fas fa-check"></i>
-                                    <span class="text">{{ object.way_of_life }}</span>
-                                </a>
-                                <a href="{% url 'app_cocktail_search_tag' object.hobby.id %}"
-                                   class="btn btn-success btn-icon-split">
-                                    <i class="fas fa-check"></i>>
-                                    <span class="text">{{ object.hobby }}</span>
-                                </a>
-                                <a href="{% url 'app_cocktail_search_tag' object.personality.id %}"
-                                   class="btn btn-success btn-icon-split">
-                                    <i class="fas fa-check"></i>
-                                    <span class="text">{{ object.personality }}</span>
-                                </a>
-                            </div>
-                                <form class="user" method="post">
-                                    {% csrf_token %}
-                                        <p>
-                                            <input type="text" name="username" class="form-control"
-                                               id="exampleInputEmail" aria-describedby="emailHelp"
-                                               placeholder="Enter Your Message">
-                                        <input type="submit" class="btn btn-facebook ">
 
+
+                    <form class="user" action="" method="post" >
+                            <div id="register">
+                                {% csrf_token %}
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        {{ form.first_name.errors }}
+                                        {{ form.first_name }}
                                     </div>
-
-                                </form>
-                                <!-- Circle Buttons (Default) -->
+                                    <div class="col-sm-6">
+                                        {{ form.last_name.errors }}
+                                        {{ form.last_name }}
+                                    </div>
+                                </div>
+                                <div class="form-group" id="datetimepicker4" data-target-input="nearest">
+                                    {{ form.birth }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.email }}
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        {{ form.password_1 }}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        {{ form.password_2 }}
+                                    </div>
+                                </div>
+{#                                <p>{{ form.avatar }}</p>#}
+{#                                <button id="button_show" class="btn btn-primary btn-user btn-block"> Next</button>#}
+                                <hr>
                             </div>
-                        </div>
-                    {% endfor %}
+                            {#                        Choice form#}
+                            <div id="choice">
+                                <div class="form-group" data-target-input="nearest">
+                                    Hobby
+                                </div>
+                                <div class="form-group">
+                                    {{ form.hobby }}
+                                </div>
+                                <div class="form-group" data-target-input="nearest">
+                                    Personality
+                                </div>
+                                <div class="form-group">
+                                    {{ form.personality }}
+                                </div>
+                                <div class="form-group">
+                                    Way Of Life
+                                </div>
+                                <div class="form-group">
+                                    {{ form.way_of_life }}
+                                </div>
 
 
+                                <hr>
+                            </div>
+                            <input type="submit" value="Modify"
+                                       class="btn btn-primary btn-user btn-block">
+
+                        </form>
                     <!-- End of Main Content -->
-
 
                     <!-- Footer -->
                     <footer class="sticky-footer bg-white">
