@@ -44,6 +44,9 @@
                         <form class="user" action="" method="post" >
                             <div id="register">
                                 {% csrf_token %}
+                                {% for error in form.errors %}
+                                 <p style="color: red">{{ error }}</p>
+                                {% endfor %}
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         {{ form.first_name.errors }}
@@ -68,6 +71,7 @@
                                         {{ form.password_1 }}
                                     </div>
                                     <div class="col-sm-6">
+                                        {{ form.password_2.errors }}
                                         {{ form.password_2 }}
                                     </div>
                                 </div>

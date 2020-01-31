@@ -17,6 +17,11 @@ class DateInput(forms.DateInput):
 
 
 class FormRegister(Form):
+    class Meta:
+        model = Person
+        fields = ('first_name', 'last_name', 'birth', 'email', 'password_1', 'password_2', 'hobby', 'personality', 'way_of_life',)
+
+
     first_name = forms.CharField(label='first_name', max_length=200, min_length=4,
                                  widget=forms.TextInput(attrs={'class': 'form-control form-control-user',
                                                                'placeholder': 'First Name'}))
@@ -40,7 +45,7 @@ class FormRegister(Form):
     password_2 = forms.CharField(label='password_2', max_length=200, min_length=4,
                                  widget=widgets.PasswordInput(attrs={'placeholder': 'Password',
                                                                      'class': 'form-control form-control-user'}))
-    avatar = forms.FileField(label='avatar', widget=widgets.FileInput(attrs={'class': ''}))
+    # avatar = forms.FileField(label='avatar', widget=widgets.FileInput(attrs={'class': ''}))
 
     hobby = forms.ModelChoiceField(
         queryset=Tag.objects.filter(categories__description='hobby'),
@@ -57,6 +62,8 @@ class FormRegister(Form):
         widget=forms.Select(attrs={'class': 'form-control form-control-user'}),
         required=False,
     )
+
+
 
     def clean_first_name(self):
         first_name = self.cleaned_data['first_name']

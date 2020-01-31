@@ -6,6 +6,7 @@ from urllib.parse import urlunparse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import SuccessURLAllowedHostsMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponseRedirect, request, QueryDict
 from django.contrib.auth import authenticate, login, REDIRECT_FIELD_NAME, user_logged_out
@@ -29,19 +30,34 @@ from app.models.question import Question
 from app.models.visitor import Visitor
 
 
-def signup(self):
-    if self.method == 'POST':
-        form = FormRegister(self.POST)
+def signup(request):
+    if request.method == 'POST':
+        form = FormRegister(request.POST)
+        print("signup")
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
+            print("form valid")
+            birth = form.cleaned_data.get('birth')
+            last_name = form.clean_last_name()
+            first_name = form.clean_first_name()
+            personality = form.cleaned_data.get('personality')
+            hobby = form.cleaned_data.get('hobby')
+            way_of_life = form.cleaned_data.get('way_of_life')
+            username = form.clean_last_name() + str(randrange(0, 101, 2))
+            username.replace(" ", "")
+            email = form.cleaned_data.get('email')
+            avatar = "https://robohash.org/" + username + ".png?size=50x50&set=set1"
             raw_password = form.cleaned_data.get('password_1')
+            password_2 = form.cleaned_data.get('password_2')
+            user = User.objects.create_user(username=username, email=email,
+                                            password=raw_password, first_name=first_name, last_name=last_name)
+            Person.objects.create(user=user, birth=birth, personality=personality, way_of_life=way_of_life, hobby=hobby,
+                                  avatar=avatar)
             user = authenticate(username=username, password=raw_password)
-            login(self, user)
-            return redirect('home')
+            login(request, user)
+            return redirect('/')
     else:
         form = FormRegister()
-    return render(self, 'register.html', {'form': form})
+    return render(request, 'register.html', {'form': form})
 
 
 def logout(request):
@@ -95,7 +111,9 @@ class RegisterView(FormView):
     form_class = FormRegister
 
     def form_valid(self, form):
-        avatar = form.cleaned_data.get('avatar');
+        form.save()
+        print("hello")
+        avatar = form.cleaned_data.get('avatar')
         birth = form.cleaned_data.get('birth')
         last_name = form.clean_last_name()
         first_name = form.clean_first_name()
@@ -105,17 +123,14 @@ class RegisterView(FormView):
         username = form.clean_last_name() + str(randrange(0, 101, 2))
         username.replace(" ", "")
         email = form.cleaned_data.get('email')
-        password_1 = form.cleaned_data.get('password_1')
+        raw_password = form.cleaned_data.get('password_1')
         password_2 = form.cleaned_data.get('password_2')
         user = User.objects.create_user(username=username, email=email,
-                                        password=password_1, first_name=first_name, last_name=last_name)
+                                        password=raw_password, first_name=first_name, last_name=last_name)
         Person.objects.create(user=user, birth=birth, personality=personality, way_of_life=way_of_life, hobby=hobby,
                               avatar=avatar)
-        username = form.cleaned_data.get('username')
-        raw_password = form.cleaned_data.get('password_1')
         user = authenticate(username=username, password=raw_password)
-        login(self, user)
-        return redirect_to_login(next)
+        return redirect('home')
 
 
 class PersonSearchView(LoginRequiredMixin, ListView):
@@ -129,7 +144,6 @@ class PersonSearchView(LoginRequiredMixin, ListView):
         user_person = Person.objects.filter(
             Q(hobby_id=person.hobby_id) | Q(way_of_life_id=person.way_of_life_id) | Q(
                 personality_id=person.personality_id))[:10]
-        print(user_person)
         return user_person
 
 
@@ -141,13 +155,16 @@ class PersonSearchTagView(LoginRequiredMixin, ListView):
         tag = self.kwargs.get('pk', '')
         return Person.objects.filter(Q(hobby_id=tag) | Q(way_of_life_id=tag) | Q(personality_id=tag))
 
+
 class ProfilSearchView(LoginRequiredMixin, ListView):
     template_name = 'profile.html'
     model = Person
 
     def get_queryset(self):
         id_person = self.kwargs.get('pk', '')
-        Visitor.objects.create(date=datetime.datetime.now(), visitor=Person.objects.get(user=User.objects.get(username=self.request.user)), person=Person.objects.get(user=User.objects.get(id=id_person)))
+        Visitor.objects.create(date=datetime.datetime.now(),
+                               visitor=Person.objects.get(user=User.objects.get(username=self.request.user)),
+                               person=Person.objects.get(user=User.objects.get(id=id_person)))
         return Person.objects.filter(id=id_person)
 
 
@@ -238,5 +255,3 @@ def redirect_to_login(next, login_url=None, redirect_field_name=REDIRECT_FIELD_N
         login_url_parts[4] = querystring.urlencode(safe='/')
 
     return HttpResponseRedirect(urlunparse(login_url_parts))
-
-

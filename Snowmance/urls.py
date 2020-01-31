@@ -17,6 +17,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path
 
+from app import views
 from app.models.person import Person
 from app.views import IndexView, RegisterView, PersonSearchView, PersonSearchTagView, LoginView, ProfileView, \
     LogoutView, ProfilSearchView
@@ -26,7 +27,7 @@ from app.views import IndexView, RegisterView, PersonSearchView, PersonSearchTag
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', PersonSearchView.as_view(), name='app_index'),
-    url(r'register/$', RegisterView.as_view(), name='app_register_view'),
+    url(r'register/$', views.signup, name='app_register_view'),
     url(r'logout/$', LogoutView.as_view(), name='app_register_view'),
     url('profil/view', ProfileView.as_view(), name='app_profile_view'),
     path('profil/tag/<int:pk>', ProfilSearchView.as_view(), name='app_profile_search_tag'),
