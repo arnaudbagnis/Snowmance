@@ -3,12 +3,12 @@
 Snowmance est un site de rencontre.
 
 Ce projet a été réalisé pour la licence professionnel Developpeur web à Aix-en-provence.
-##Inscription
+## Inscription
 
 Pour accéder au site internet, vous devez vous connecter/inscrire  obligatoirement : 
 Attention ! le user est généré automatiquement, pensez à la concervé précieusement avant de vous deconnecté !
 
-##liste des page accéssible : 
+## liste des pages accéssibles : 
 
 + / : affiche les profils qui ont les mêmes attributs que vous 
 + /profil : affiche votre profil, vous pouviez modifier votre profil sur cette page 
@@ -18,7 +18,7 @@ Attention ! le user est généré automatiquement, pensez à la concervé préci
 + /register : s'inscrire 
 + /logout : Se deconnecter 
 
-##liste des fonctionnalités accessibles à la prochaine version !
+## liste des fonctionnalités accessibles à la prochaine version !
 
 + Envoyer des message aux utilisateurs 
 
